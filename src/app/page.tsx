@@ -2,11 +2,13 @@
 
 import { FormEvent, useState } from 'react';
 import Image from 'next/image'
+import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import logoImage from '../assets/logo.svg'
 import { TaskItem } from '@/components/TaskItem'
 
 interface Task {
+  id: number;
   title: string;
   isChecked?: boolean;
 }
@@ -25,11 +27,29 @@ export default function Home() {
     }
 
     const task = {
+      id: new Date().getTime(),
       title: newTask,
     } as Task;
 
     setTasks(prevState => [...prevState, task]);
     setNewTask('');
+  }
+
+  function handleRemoveTask(id: number) {
+    const newTasksList = tasks.filter(task => task.id !== id);
+    setTasks(newTasksList)
+  }
+
+  function handleOnDragEnd(result: DropResult) {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(tasks);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setTasks(items);
   }
 
   return (
@@ -52,11 +72,28 @@ export default function Home() {
         </button>
       </form>
 
-      <div className='flex flex-col my-12 gap-2'>
-        {tasks.map(task => (
-          <TaskItem key={task.title} title={task.title} />
-        ))}
-      </div>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId='listItems'>
+          {(provided) => (
+            <ul className='flex flex-col my-12 gap-2' {...provided.droppableProps} ref={provided.innerRef}>
+              {tasks.map((task, index) => (
+                <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                  {(provided) => (
+                    <TaskItem
+                      ref={provided.innerRef}
+                      task={task}
+                      removeTask={handleRemoveTask}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   )
 }
