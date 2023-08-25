@@ -6,6 +6,7 @@ import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautif
 
 import logoImage from '../assets/logo.svg'
 import { TaskItem } from '@/components/TaskItem'
+import { ChevronRight } from 'lucide-react';
 
 interface Task {
   id: number;
@@ -99,8 +100,8 @@ export default function Home() {
           placeholder="Write your task here..."
           className='flex flex-1 p-4'
         />
-        <button type="submit" className='bg-primary flex justify-center items-center px-8 text-lg font-semibold text-white'>
-          Add task
+        <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white'>
+          <ChevronRight />
         </button>
       </form>
 

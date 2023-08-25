@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${rajdhani.variable}`}>
-      <body className='bg-dark-gray'>
+      <body className='bg-gray-900'>
         {children}
       </body>
     </html>
