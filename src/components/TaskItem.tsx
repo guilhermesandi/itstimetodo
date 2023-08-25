@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, forwardRef, Ref } from 'react'
-import { Check, Trash2 } from 'lucide-react'
+import { Check, Trash2, Network } from 'lucide-react'
 import * as Checkbox from '@radix-ui/react-checkbox'
 
 interface Task {
@@ -12,20 +12,15 @@ interface Task {
 
 interface Props {
   task: Task;
+  toggleTaskDone: (id: number) => void;
   removeTask: (id: number) => void;
 }
 
-export const TaskItem = forwardRef(function TaskItem({ task, removeTask, ...rest }: Props, ref: Ref<HTMLLIElement>) {
-  const [isChecked, setIsChecked] = useState(!!task.isChecked);
-
-  function handleToggleTask() {
-    setIsChecked(prevState => !prevState);
-  }
-
+export const TaskItem = forwardRef(function TaskItem({ task, toggleTaskDone, removeTask, ...rest }: Props, ref: Ref<HTMLLIElement>) {
   return (
     <li ref={ref} className='bg-light-black rounded-md p-4 flex justify-between items-center' {...rest}>
       <Checkbox.Root
-        onCheckedChange={handleToggleTask}
+        onCheckedChange={() => toggleTaskDone(task.id)}
         checked={task.isChecked}
         disabled={false}
         className="flex items-center gap-3 group focus:outline-none disabled:cursor-not-allowed"
@@ -41,9 +36,15 @@ export const TaskItem = forwardRef(function TaskItem({ task, removeTask, ...rest
         </span>
       </Checkbox.Root>
 
-      <button onClick={() => removeTask(task.id)}>
-        <Trash2 size={20} className="text-white" />
-      </button>
+      <div className='flex gap-2'>
+        <button onClick={() => removeTask(task.id)} className='w-8 h-8 flex justify-center items-center'>
+          <Network size={20} className="text-white" />
+        </button>
+
+        <button onClick={() => removeTask(task.id)} className='w-8 h-8 flex justify-center items-center'>
+          <Trash2 size={20} className="text-white" />
+        </button>
+      </div>
     </li>
   )
 });

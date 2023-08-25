@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import Image from 'next/image'
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
 
@@ -15,7 +15,18 @@ interface Task {
 
 export default function Home() {
   const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const storedTasks = localStorage.getItem(
+      '@itsTimeTodo:tasks',
+    );
+
+    if (storedTasks) {
+      return JSON.parse(storedTasks);
+    }
+
+    return [];
+  });
+  
 
   function handleAddTask(
     event: FormEvent<HTMLFormElement>,
@@ -40,6 +51,20 @@ export default function Home() {
     setTasks(newTasksList)
   }
 
+  function handleToggleTaskDone(id: number) {
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === id)
+
+    if (!foundTask) {
+      return;
+    }
+
+    foundTask.isChecked = !foundTask.isChecked;
+
+    setTasks(updatedTasks);
+  }
+
   function handleOnDragEnd(result: DropResult) {
     if (!result.destination) {
       return;
@@ -51,6 +76,13 @@ export default function Home() {
 
     setTasks(items);
   }
+
+  useEffect(() => {
+    localStorage.setItem(
+      '@itsTimeTodo:tasks',
+      JSON.stringify(tasks),
+    );
+  }, [tasks]);
 
   return (
     <div className='flex max-w-3xl flex-col mx-auto px-4'>
@@ -82,6 +114,7 @@ export default function Home() {
                     <TaskItem
                       ref={provided.innerRef}
                       task={task}
+                      toggleTaskDone={handleToggleTaskDone}
                       removeTask={handleRemoveTask}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
