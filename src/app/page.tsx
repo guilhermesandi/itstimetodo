@@ -60,6 +60,18 @@ export default function Home() {
     setTasks(updatedTasks);
   }
 
+  function handleDragTask(result: DropResult) {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = Array.from(tasks);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setTasks(items);
+  }
+
   function handleAddSubtask(taskId: number, subtask: TaskProps) {
     console.log('subtask', subtask)
     const updatedTasks = tasks.map(task => ({ ...task }))
@@ -79,16 +91,40 @@ export default function Home() {
     setTasks(updatedTasks);
   }
 
-  function handleOnDragEnd(result: DropResult) {
-    if (!result.destination) {
+  function handleRemoveSubtask(taskId: number, subtaskId: number) {
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === taskId);
+
+    if (!foundTask) {
       return;
     }
 
-    const items = Array.from(tasks);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+    const newSubtasksList = foundTask.subtasks?.filter(subtask => subtask.id !== subtaskId);
 
-    setTasks(items);
+    foundTask.subtasks = newSubtasksList;
+
+    setTasks(updatedTasks)
+  }
+
+  function handleToggleSubtaskDone(taskId: number, subtaskId: number) {
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === taskId)
+
+    if (!foundTask) {
+      return;
+    }
+
+    const foundSubtask = foundTask.subtasks?.find(subtask => subtask.id === subtaskId)
+
+    if (!foundSubtask) {
+      return;
+    }
+
+    foundSubtask.isChecked = !foundSubtask.isChecked;
+
+    setTasks(updatedTasks);
   }
 
   useEffect(() => {
@@ -104,7 +140,7 @@ export default function Home() {
         <Image src={logoImage} width={120} alt="It's Time To-do" />
       </header>
 
-      <h1 className='text-5xl font-mono text-white mt-16 mb-6'>Organize your tasks.</h1>
+      <h1 className='text-5xl font-mono text-white mt-16 mb-6'>Manage your tasks.</h1>
 
       <form className='flex rounded-md overflow-hidden' onSubmit={handleAddTask}>
         <input
@@ -118,7 +154,7 @@ export default function Home() {
         </button>
       </form>
 
-      <DragDropContext onDragEnd={handleOnDragEnd}>
+      <DragDropContext onDragEnd={handleDragTask}>
         <Droppable droppableId='listItems'>
           {(provided) => (
             <ul className='flex flex-col my-12 gap-2' {...provided.droppableProps} ref={provided.innerRef}>
@@ -131,6 +167,8 @@ export default function Home() {
                       toggleTaskDone={handleToggleTaskDone}
                       removeTask={handleRemoveTask}
                       addSubtask={handleAddSubtask}
+                      removeSubtask={handleRemoveSubtask}
+                      toggleSubtaskDone={handleToggleSubtaskDone}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     />
