@@ -11,9 +11,16 @@ interface Props {
   addSubtask: (taskId: number, subtask: TaskProps) => void;
   removeSubtask: (taskId: number, subtaskId: number) => void;
   toggleSubtaskDone: (taskId: number, subtaskId: number) => void;
+  dragSubtask: (taskId: number, result: DropResult) => void;
 }
 
-export function Subtasks({ task, addSubtask, removeSubtask, toggleSubtaskDone }: Props) {
+export function Subtasks({
+  task,
+  addSubtask,
+  removeSubtask,
+  toggleSubtaskDone,
+  dragSubtask,
+}: Props) {
   const [newSubtask, setNewSubtask] = useState('');
 
   function handleAddSubtask(
@@ -52,7 +59,7 @@ export function Subtasks({ task, addSubtask, removeSubtask, toggleSubtaskDone }:
             Update and create subtasks.
           </Dialog.Description>
 
-          <DragDropContext onDragEnd={() => console.log('a')}>
+          <DragDropContext onDragEnd={(result) => dragSubtask(task.id, result)}>
             <Droppable droppableId='listSubtasks'>
               {(provided) => (
                 <ul className='flex flex-col gap-2' {...provided.droppableProps} ref={provided.innerRef}>

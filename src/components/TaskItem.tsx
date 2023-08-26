@@ -1,7 +1,8 @@
 'use client'
 
 import { forwardRef, Ref } from 'react'
-import { Check, Trash2, Network } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
+import { DropResult } from 'react-beautiful-dnd';
 
 import { Subtasks } from './Subtasks';
 import { Checkbox } from './Checkbox';
@@ -23,6 +24,7 @@ interface Props {
   addSubtask: (taskId: number, subtask: TaskProps) => void;
   removeSubtask: (taskId: number, subtaskId: number) => void;
   toggleSubtaskDone: (taskId: number, subtaskId: number) => void;
+  dragSubtask: (taskId: number, result: DropResult) => void;
 }
 
 export const TaskItem = forwardRef(function TaskItem({
@@ -32,6 +34,7 @@ export const TaskItem = forwardRef(function TaskItem({
   addSubtask,
   removeSubtask,
   toggleSubtaskDone,
+  dragSubtask,
   ...rest
 }: Props, ref: Ref<HTMLLIElement>) {
   return (
@@ -48,6 +51,7 @@ export const TaskItem = forwardRef(function TaskItem({
           addSubtask={addSubtask}
           removeSubtask={removeSubtask}
           toggleSubtaskDone={toggleSubtaskDone}
+          dragSubtask={dragSubtask}
         />
 
         <button onClick={() => removeTask(task.id)} className='w-8 h-8 flex justify-center items-center'>

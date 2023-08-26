@@ -68,6 +68,7 @@ export default function Home() {
     const items = Array.from(tasks);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
+    console.log('items', items);
 
     setTasks(items);
   }
@@ -127,6 +128,30 @@ export default function Home() {
     setTasks(updatedTasks);
   }
 
+  function handleDragSubtask(taskId: number, result: DropResult) {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === taskId);
+
+    if (!foundTask) {
+      return;
+    }
+
+    if (foundTask.subtasks) {
+      const items = Array.from(foundTask.subtasks);
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+
+      foundTask.subtasks = items;
+
+      setTasks(updatedTasks);
+    }
+  }
+
   useEffect(() => {
     localStorage.setItem(
       '@itsTimeTodo:tasks',
@@ -169,6 +194,7 @@ export default function Home() {
                       addSubtask={handleAddSubtask}
                       removeSubtask={handleRemoveSubtask}
                       toggleSubtaskDone={handleToggleSubtaskDone}
+                      dragSubtask={handleDragSubtask}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     />
