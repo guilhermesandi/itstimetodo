@@ -1,9 +1,38 @@
-import { Check, Network, X } from 'lucide-react'
+import { FormEvent, useState } from 'react'
+import { ChevronRight, Network, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import { Checkbox } from './Checkbox'
+import { Task, TaskProps } from './TaskItem'
 
-export function Subtasks() {
+interface Props {
+  task: Task;
+  addSubtask: (taskId: number, subtask: TaskProps) => void;
+}
+
+export function Subtasks({ task, addSubtask }: Props) {
+  console.log('task', task)
+  const [newSubtask, setNewSubtask] = useState('');
+
+  function handleAddSubtask(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    if (!newSubtask) {
+      return;
+    }
+
+    const subtask = {
+      id: new Date().getTime(),
+      title: newSubtask,
+    } as TaskProps;
+
+    addSubtask(task.id, subtask);
+    // setSubtasks(prevState => [...prevState, task]);
+    setNewSubtask('');
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -15,24 +44,32 @@ export function Subtasks() {
       <Dialog.Portal>
         <Dialog.Overlay className="bg-gray-opacity data-[state=open]:animate-overlayShow fixed inset-0" />
         <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-gray-700 p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-          <Dialog.Title className="text-white m-0 text-[17px] font-medium">
-            Subtasks
+          <Dialog.Title className='text-4xl font-mono text-white'>
+            {task.title}
           </Dialog.Title>
-          <Dialog.Description className="text-white mt-[10px] mb-5 text-[15px] leading-normal">
+          <Dialog.Description className="text-white mt-2 mb-5 text-base">
             Update and create subtasks.
           </Dialog.Description>
 
           <ul className='flex flex-col gap-2'>
-            <li className='bg-gray-300 rounded-md p-4 flex justify-between items-center'>
-              <Checkbox title='Subtask' />
-            </li>
-            <li className='bg-gray-300 rounded-md p-4 flex justify-between items-center'>
-              <Checkbox title='Subtask' />
-            </li>
-            <li className='bg-gray-300 rounded-md p-4 flex justify-between items-center'>
-              <Checkbox title='Subtask' />
-            </li>
+            {task.subtasks?.map((subtask) => (
+              <li key={subtask.id} className='bg-gray-300 rounded-md p-4 flex justify-between items-center'>
+                <Checkbox title={subtask.title} />
+              </li>
+            ))}
           </ul>
+
+          <form className='flex rounded-md overflow-hidden mt-2' onSubmit={handleAddSubtask}>
+            <input
+              value={newSubtask}
+              onChange={e => setNewSubtask(e.target.value)}
+              placeholder="Write your subtask here..."
+              className='flex flex-1 p-4'
+            />
+            <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white'>
+              <ChevronRight />
+            </button>
+          </form>
 
           <Dialog.Close asChild>
             <button

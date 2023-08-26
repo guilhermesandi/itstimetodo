@@ -5,14 +5,8 @@ import Image from 'next/image'
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import logoImage from '../assets/logo.svg'
-import { TaskItem } from '@/components/TaskItem'
+import { Task, TaskItem, TaskProps } from '@/components/TaskItem'
 import { ChevronRight } from 'lucide-react';
-
-interface Task {
-  id: number;
-  title: string;
-  isChecked?: boolean;
-}
 
 export default function Home() {
   const [newTask, setNewTask] = useState('');
@@ -62,6 +56,25 @@ export default function Home() {
     }
 
     foundTask.isChecked = !foundTask.isChecked;
+
+    setTasks(updatedTasks);
+  }
+
+  function handleAddSubtask(taskId: number, subtask: TaskProps) {
+    console.log('subtask', subtask)
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === taskId)
+
+    if (!foundTask) {
+      return;
+    }
+
+    if (foundTask.subtasks) {
+      foundTask.subtasks?.push(subtask);
+    } else {
+      foundTask.subtasks = [subtask];
+    }
 
     setTasks(updatedTasks);
   }
@@ -117,6 +130,7 @@ export default function Home() {
                       task={task}
                       toggleTaskDone={handleToggleTaskDone}
                       removeTask={handleRemoveTask}
+                      addSubtask={handleAddSubtask}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     />
