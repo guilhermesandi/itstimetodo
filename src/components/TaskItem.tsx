@@ -38,14 +38,18 @@ export const TaskItem = forwardRef(function TaskItem({
   ...rest
 }: Props, ref: Ref<HTMLLIElement>) {
   return (
-    <li ref={ref} className='bg-gray-500 rounded-md p-4 flex justify-between items-center' {...rest}>
+    <li
+      ref={ref}
+      className='bg-gray-500 rounded-md p-4 flex justify-between items-center'
+      {...rest}
+    >
       <Checkbox
         title={task.title}
         isChecked={task.isChecked}
         onCheckedChange={() => toggleTaskDone(task.id)}
       />
 
-      <div className='flex gap-2'>
+      <div className='flex gap-2 ml-2'>
         <Subtasks
           task={task}
           addSubtask={addSubtask}

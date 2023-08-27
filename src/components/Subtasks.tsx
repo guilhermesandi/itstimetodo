@@ -1,10 +1,12 @@
 import { FormEvent, useState } from 'react'
-import { ChevronRight, Network, Trash2, X } from 'lucide-react'
+import { ChevronRight, List, Trash2, X } from 'lucide-react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd'
+import clsx from 'clsx'
 
 import { Checkbox } from './Checkbox'
 import { Task, TaskProps } from './TaskItem'
+import { ProgressBar } from './ProgressBar'
 
 interface Props {
   task: Task;
@@ -41,12 +43,38 @@ export function Subtasks({
     setNewSubtask('');
   }
 
+  function getSubtasksDoneNumber() {
+    const checkedTasks = task.subtasks?.filter((subtask) => subtask.isChecked === true);
+
+    if (!checkedTasks) {
+      return 0;
+    }
+
+    return checkedTasks.length;
+  }
+
+  function getCompletedPercentage() {
+    const completedPercentage = task.subtasks!.length > 0 ? Math.round((getSubtasksDoneNumber() / task.subtasks!.length) * 100) : 0;
+
+    return completedPercentage;
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className='w-8 h-8 flex justify-center items-center'>
-          <Network size={20} className="text-white" />
-        </button>
+        <div className='flex items-center'>
+          {task.subtasks && (
+            <span className={clsx('text-white text-xs mr-3', {
+              'text-violet-400 font-bold' : getSubtasksDoneNumber() === task.subtasks?.length,
+            })}>
+              {getSubtasksDoneNumber()} / {task.subtasks?.length}
+            </span>
+          )}
+
+          <button className='w-8 h-8 flex justify-center items-center'>
+            <List size={24} className="text-white" />
+          </button>
+        </div>
       </Dialog.Trigger>
 
       <Dialog.Portal>
@@ -58,6 +86,10 @@ export function Subtasks({
           <Dialog.Description className="text-white mt-2 mb-5 text-base">
             Update and create subtasks.
           </Dialog.Description>
+
+          {task.subtasks && (
+            <ProgressBar progress={getCompletedPercentage()} />
+          )}
 
           <DragDropContext onDragEnd={(result) => dragSubtask(task.id, result)}>
             <Droppable droppableId='listSubtasks'>
