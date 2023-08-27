@@ -2,11 +2,13 @@
 
 import { FormEvent, useState, useEffect } from 'react';
 import Image from 'next/image'
+import { ChevronRight } from 'lucide-react';
 import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
 
 import logoImage from '../assets/logo.svg'
+
 import { Task, TaskItem, TaskProps } from '@/components/TaskItem'
-import { ChevronRight } from 'lucide-react';
+import { Input } from '@/components/Input';
 
 export default function Home() {
   const [newTask, setNewTask] = useState('');
@@ -167,16 +169,12 @@ export default function Home() {
 
       <h1 className='text-5xl font-mono text-white mt-16 mb-6'>Manage your tasks.</h1>
 
-      <form className='flex rounded-md overflow-hidden' onSubmit={handleAddTask}>
-        <input
+      <form onSubmit={handleAddTask}>
+        <Input
           value={newTask}
           onChange={e => setNewTask(e.target.value)}
           placeholder="Write your task here..."
-          className='flex flex-1 p-4'
         />
-        <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white'>
-          <ChevronRight />
-        </button>
       </form>
 
       <DragDropContext onDragEnd={handleDragTask}>

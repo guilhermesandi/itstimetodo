@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { Checkbox } from './Checkbox'
 import { Task, TaskProps } from './TaskItem'
 import { ProgressBar } from './ProgressBar'
+import { Input } from './Input'
 
 interface Props {
   task: Task;
@@ -79,7 +80,7 @@ export function Subtasks({
 
       <Dialog.Portal>
         <Dialog.Overlay className="bg-gray-opacity data-[state=open]:animate-overlayShow fixed inset-0" />
-        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-gray-700 p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
+        <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-gray-700 p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none overflow-y-scroll">
           <Dialog.Title className='text-4xl font-mono text-white'>
             {task.title}
           </Dialog.Title>
@@ -123,16 +124,12 @@ export function Subtasks({
             </Droppable>
           </DragDropContext>
 
-          <form className='flex rounded-md overflow-hidden mt-2' onSubmit={handleAddSubtask}>
-            <input
+          <form className='mt-2' onSubmit={handleAddSubtask}>
+            <Input
               value={newSubtask}
               onChange={e => setNewSubtask(e.target.value)}
               placeholder="Write your subtask here..."
-              className='flex flex-1 p-4'
             />
-            <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white'>
-              <ChevronRight />
-            </button>
           </form>
 
           <Dialog.Close asChild>
