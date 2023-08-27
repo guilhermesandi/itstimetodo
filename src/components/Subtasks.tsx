@@ -100,7 +100,7 @@ export function Subtasks({
                       {(provided) => (
                         <li
                           ref={provided.innerRef}
-                          className='bg-gray-300 rounded-md p-4 flex justify-between items-center !top-auto !left-auto'
+                          className='bg-gray-300 rounded-md p-4 flex items-center !top-auto !left-auto'
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
@@ -110,7 +110,7 @@ export function Subtasks({
                             onCheckedChange={() => toggleSubtaskDone(task.id, subtask.id)}
                           />
 
-                          <button onClick={() => removeSubtask(task.id, subtask.id)} className='w-8 h-8 flex justify-center items-center'>
+                          <button onClick={() => removeSubtask(task.id, subtask.id)} className='w-8 h-8 min-w-[2rem] flex justify-center items-center ml-auto'>
                             <Trash2 size={20} className="text-white" />
                           </button>
                         </li>

@@ -40,7 +40,7 @@ export const TaskItem = forwardRef(function TaskItem({
   return (
     <li
       ref={ref}
-      className='bg-gray-500 rounded-md p-4 flex justify-between items-center'
+      className='bg-gray-500 rounded-md p-4 flex items-center'
       {...rest}
     >
       <Checkbox
@@ -49,7 +49,7 @@ export const TaskItem = forwardRef(function TaskItem({
         onCheckedChange={() => toggleTaskDone(task.id)}
       />
 
-      <div className='flex gap-2 ml-2'>
+      <div className='flex gap-2 ml-auto min-w-fit'>
         <Subtasks
           task={task}
           addSubtask={addSubtask}
