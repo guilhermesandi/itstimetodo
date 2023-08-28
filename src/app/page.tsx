@@ -70,13 +70,11 @@ export default function Home() {
     const items = Array.from(tasks);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    console.log('items', items);
 
     setTasks(items);
   }
 
   function handleAddSubtask(taskId: number, subtask: TaskProps) {
-    console.log('subtask', subtask)
     const updatedTasks = tasks.map(task => ({ ...task }))
 
     const foundTask = updatedTasks.find(task => task.id === taskId)

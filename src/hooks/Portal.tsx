@@ -10,8 +10,6 @@ export const useDraggableInPortal = () => {
     const div = document.createElement('div');
     div.style.position = 'absolute';
     div.style.pointerEvents = 'none';
-    div.style.width = '100%';
-    div.style.height = '100%';
     self.elt = div;
     document.body.appendChild(div);
     return () => {

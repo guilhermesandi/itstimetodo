@@ -8,7 +8,7 @@ export function Input({ ...rest }: InputHTMLAttributes<HTMLInputElement>) {
         className='flex flex-1 p-4'
         {...rest}
       />
-      <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white'>
+      <button type="submit" className='bg-primary flex justify-center items-center px-6 text-lg font-semibold text-white transition-colors hover:bg-primary-hover'>
         <ChevronRight />
       </button>
     </div>
