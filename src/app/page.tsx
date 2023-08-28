@@ -12,17 +12,8 @@ import { Input } from '@/components/Input';
 
 export default function Home() {
   const [newTask, setNewTask] = useState('');
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    const storedTasks = localStorage.getItem(
-      '@itsTimeTodo:tasks',
-    );
-
-    if (storedTasks) {
-      return JSON.parse(storedTasks);
-    }
-
-    return [];
-  });
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
 
   function handleAddTask(
@@ -153,11 +144,34 @@ export default function Home() {
   }
 
   useEffect(() => {
-    localStorage.setItem(
-      '@itsTimeTodo:tasks',
-      JSON.stringify(tasks),
-    );
-  }, [tasks]);
+    if (typeof window !== 'undefined') {
+      console.log('entrou');
+      
+      const storedTasks = localStorage.getItem(
+        '@itsTimeTodo:tasks',
+      );
+  
+      console.log('storedTasks', storedTasks)
+      if (storedTasks) {
+        setTasks(JSON.parse(storedTasks));
+        setIsLoading(false);
+
+        return;
+      }
+  
+      setTasks([]);
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem(
+        '@itsTimeTodo:tasks',
+        JSON.stringify(tasks),
+      );
+    }
+  }, [tasks, isLoading]);
 
   return (
     <div className='flex max-w-3xl flex-col mx-auto px-4'>
