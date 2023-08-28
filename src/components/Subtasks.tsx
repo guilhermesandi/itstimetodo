@@ -8,6 +8,7 @@ import { Checkbox } from './Checkbox'
 import { Task, TaskProps } from './TaskItem'
 import { ProgressBar } from './ProgressBar'
 import { Input } from './Input'
+import { useDraggableInPortal } from '@/hooks/Portal'
 
 interface Props {
   task: Task;
@@ -24,6 +25,8 @@ export function Subtasks({
   toggleSubtaskDone,
   dragSubtask,
 }: Props) {
+  const renderDraggable = useDraggableInPortal();
+
   const [newSubtask, setNewSubtask] = useState('');
 
   function handleAddSubtask(
@@ -98,7 +101,7 @@ export function Subtasks({
                 <ul className='flex flex-col gap-2' {...provided.droppableProps} ref={provided.innerRef}>
                   {task.subtasks?.map((subtask, index) => (
                     <Draggable key={subtask.id} draggableId={String(subtask.id)} index={index}>
-                      {(provided) => (
+                      {renderDraggable((provided) => (
                         <li
                           ref={provided.innerRef}
                           className='bg-gray-300 rounded-md p-4 flex items-center !top-auto !left-auto'
@@ -115,7 +118,7 @@ export function Subtasks({
                             <Trash2 size={20} className="text-white" />
                           </button>
                         </li>
-                      )}
+                      ))}
                     </Draggable>
                   ))}
                   {provided.placeholder}
