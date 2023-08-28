@@ -59,7 +59,7 @@ export const TaskItem = forwardRef(function TaskItem({
         />
 
         <button onClick={() => removeTask(task.id)} className='w-8 h-8 flex justify-center items-center'>
-          <Trash2 size={20} className="text-white" />
+          <Trash2 size={20} className="text-red-500" />
         </button>
       </div>
     </li>

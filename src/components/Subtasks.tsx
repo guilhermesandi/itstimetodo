@@ -69,7 +69,7 @@ export function Subtasks({
         <div className='flex items-center'>
           {task.subtasks && (
             <span className={clsx('text-white text-xs mr-3', {
-              'text-violet-300 font-bold' : getSubtasksDoneNumber() === task.subtasks?.length,
+              'text-violet-400 font-bold' : getSubtasksDoneNumber() === task.subtasks?.length,
             })}>
               {getSubtasksDoneNumber()} / {task.subtasks?.length}
             </span>
@@ -115,7 +115,7 @@ export function Subtasks({
                           />
 
                           <button onClick={() => removeSubtask(task.id, subtask.id)} className='w-8 h-8 min-w-[2rem] flex justify-center items-center ml-auto'>
-                            <Trash2 size={20} className="text-white" />
+                            <Trash2 size={20} className="text-red-500" />
                           </button>
                         </li>
                       ))}
