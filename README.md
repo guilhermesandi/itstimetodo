@@ -31,7 +31,7 @@
 git clone https://github.com/guilhermesandi/itstimetodo
 
 # Go to the root directory of the repository
-cd itstimetod
+cd itstimetodo
 
 # Install the dependencies
 npm install
