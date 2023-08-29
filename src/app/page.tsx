@@ -27,7 +27,7 @@ export default function Home() {
 
     const task = {
       id: new Date().getTime(),
-      title: newTask,
+      title: newTask.trim(),
     } as Task;
 
     setTasks(prevState => [...prevState, task]);
@@ -159,13 +159,11 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      console.log('entrou');
       
       const storedTasks = localStorage.getItem(
         '@itsTimeTodo:tasks',
       );
   
-      console.log('storedTasks', storedTasks)
       if (storedTasks) {
         setTasks(JSON.parse(storedTasks));
         setIsLoading(false);

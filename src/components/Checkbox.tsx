@@ -1,24 +1,50 @@
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 import * as CheckBoxRadix from "@radix-ui/react-checkbox";
 import clsx from "clsx";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 
 interface Props {
-  taskId: number;
+  id: number;
   title: string;
   isChecked?: boolean;
   onCheckedChange?: () => void;
   isEditable?: boolean;
-  setIsEditable: (value: boolean) => void;
-  editTask: (id: number, taskNewTitle: string) => void;
+  setIsEditable?: (value: boolean) => void;
+  editTask?: (id: number, taskNewTitle: string) => void;
 }
 
-export function Checkbox({ taskId, title, isChecked, onCheckedChange, isEditable, setIsEditable, editTask }: Props) {
+export function Checkbox({ id, title, isChecked, onCheckedChange, isEditable, setIsEditable, editTask }: Props) {
   const [newTitle, setNewTitle] = useState(title);
 
-  function handleSubmitEditing() {
-    editTask(taskId, newTitle)
-    setIsEditable(false);
+  function handleCancelEditing() {
+    if (setIsEditable) {
+      setIsEditable(false);
+    }
+    setNewTitle(title);
+  }
+
+  function handleSubmitEditing(
+    event?: FormEvent<HTMLFormElement>,
+  ) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    if (!newTitle.trim()) {
+      handleCancelEditing();
+
+      return;
+    }
+
+    if (editTask) {
+      editTask(id, newTitle.trim())
+    }
+
+    if (setIsEditable) {
+      setIsEditable(false);
+    }
+
+    setNewTitle(newTitle.trim())
   }
 
   return (
@@ -38,20 +64,24 @@ export function Checkbox({ taskId, title, isChecked, onCheckedChange, isEditable
       </CheckBoxRadix.Root>
 
       {isEditable ? (
-        <>
+        <form className="flex w-full" onSubmit={handleSubmitEditing}>
           <input
             type="text"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            onBlur={handleSubmitEditing}
+            onSubmit={() => handleSubmitEditing}
             autoFocus
-            className="font-semibold text-xl text-white whitespace-nowrap overflow-hidden text-ellipsis mr-2 bg-transparent w-full pr-2"
+            className="font-semibold text-xl text-white whitespace-nowrap overflow-hidden text-ellipsis mr-2 bg-transparent w-full pr-2 border-white border rounded"
           />
 
-          <button onClick={handleSubmitEditing} className='w-8 h-8 flex justify-center items-center mr-4'>
+          <button type="submit" className='w-8 h-8 flex justify-center items-center mr-1'>
             <Check size={20} className="text-white" />
           </button>
-        </>
+
+          <button onClick={handleCancelEditing} className='w-8 h-8 flex justify-center items-center mr-4'>
+            <X size={20} className="text-white" />
+          </button>
+        </form>
       ) : (
         <span
           className={clsx("font-semibold text-xl text-white whitespace-nowrap overflow-hidden text-ellipsis mr-2", {

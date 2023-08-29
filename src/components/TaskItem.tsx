@@ -59,7 +59,7 @@ export const TaskItem = forwardRef(function TaskItem({
       {...rest}
     >
       <Checkbox
-        taskId={task.id}
+        id={task.id}
         title={task.title}
         isChecked={task.isChecked}
         onCheckedChange={() => toggleTaskDone(task.id)}

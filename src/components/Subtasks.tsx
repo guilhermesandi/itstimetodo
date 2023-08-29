@@ -109,6 +109,7 @@ export function Subtasks({
                           {...provided.dragHandleProps}
                         >
                           <Checkbox
+                            id={subtask.id}
                             title={subtask.title}
                             isChecked={subtask.isChecked}
                             onCheckedChange={() => toggleSubtaskDone(task.id, subtask.id)}
