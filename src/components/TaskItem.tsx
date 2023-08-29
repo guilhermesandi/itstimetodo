@@ -1,7 +1,7 @@
 'use client'
 
-import { forwardRef, Ref } from 'react'
-import { Trash2 } from 'lucide-react'
+import { forwardRef, Ref, useState } from 'react'
+import { Check, Pencil, Trash2 } from 'lucide-react'
 import { DropResult } from 'react-beautiful-dnd';
 
 import { Subtasks } from './Subtasks';
@@ -20,6 +20,7 @@ export interface Task extends TaskProps {
 interface Props {
   task: Task;
   toggleTaskDone: (id: number) => void;
+  editTask: (id: number, taskNewTitle: string) => void;
   removeTask: (id: number) => void;
   addSubtask: (taskId: number, subtask: TaskProps) => void;
   removeSubtask: (taskId: number, subtaskId: number) => void;
@@ -29,6 +30,7 @@ interface Props {
 
 export const TaskItem = forwardRef(function TaskItem({
   task,
+  editTask,
   toggleTaskDone,
   removeTask,
   addSubtask,
@@ -37,17 +39,40 @@ export const TaskItem = forwardRef(function TaskItem({
   dragSubtask,
   ...rest
 }: Props, ref: Ref<HTMLLIElement>) {
+  const [isHovering, setIsHovering] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
   return (
     <li
       ref={ref}
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
       className='bg-gray-500 rounded-md p-4 flex items-center'
       {...rest}
     >
       <Checkbox
+        taskId={task.id}
         title={task.title}
         isChecked={task.isChecked}
         onCheckedChange={() => toggleTaskDone(task.id)}
+        isEditable={isEditable}
+        setIsEditable={setIsEditable}
+        editTask={editTask}
       />
+
+      {!isEditable && isHovering && (
+        <button onClick={() => setIsEditable(true)} className='w-8 h-8 flex justify-center items-center mr-4'>
+          <Pencil size={20} className="text-white" />
+        </button>
+      )}
 
       <div className='flex gap-2 ml-auto min-w-fit'>
         <Subtasks

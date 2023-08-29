@@ -39,6 +39,20 @@ export default function Home() {
     setTasks(newTasksList)
   }
 
+  function handleEditTask(id: number, taskNewTitle: string) {
+    const updatedTasks = tasks.map(task => ({ ...task }))
+
+    const foundTask = updatedTasks.find(task => task.id === id)
+
+    if (!foundTask) {
+      return;
+    }
+
+    foundTask.title = taskNewTitle;
+
+    setTasks(updatedTasks);
+  }
+
   function handleToggleTaskDone(id: number) {
     const updatedTasks = tasks.map(task => ({ ...task }))
 
@@ -199,6 +213,7 @@ export default function Home() {
                     <TaskItem
                       ref={provided.innerRef}
                       task={task}
+                      editTask={handleEditTask}
                       toggleTaskDone={handleToggleTaskDone}
                       removeTask={handleRemoveTask}
                       addSubtask={handleAddSubtask}
